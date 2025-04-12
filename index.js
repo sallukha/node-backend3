@@ -30,7 +30,7 @@ app.post("/log_in", async (req, res) => {
 
 // Signup Route
 app.post('/sign_up', async (req, res) => {
-    const { username, email, password, cPassword } = req.body
+    const { fullName, email, password,confirmPassword  } = req.body
 
     try {
         const existingUser = await model.findOne({ email })
@@ -38,7 +38,7 @@ app.post('/sign_up', async (req, res) => {
             return res.status(400).json({ message: "Email is already in use" })
         }
 
-        const newUser = new model({ username, email, password, cPassword })
+        const newUser = new model({ fullName, email, password, confirmPassword })
         const data = await newUser.save()
 
         res.status(201).json({ message: "Signup successful", data })
