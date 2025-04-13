@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
+
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/users2', {
+    await mongoose.connect('mongodb + srv://sallukhan54154:y3KIhN0VQBm0klTD@pro-users.zywik9l.mongodb.net/?retryWrites=true&w=majority&appName=pro-users', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('Successfully connected to MongoDB');
+    console.log('✅ Connected to MongoDB Atlas');
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error.message);
-    process.exit(1); // Exit the process with failure
+    console.error('❌ MongoDB Atlas Connection Error:', error.message);
+    process.exit(1);
   }
 };
 
-connectDB();
-
+module.exports = connectDB;
