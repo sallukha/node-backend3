@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   }
 
   await dbConnect();
-  const { fullname, email, password, confirmPassword } = req.body;
+  const { fullname, email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    const newUser = new User({ fullname, email, password, confirmPassword });
+    const newUser = new User({ fullname, email, password,  });
     const savedUser = await newUser.save();
 
     res.status(201).json({ message: 'Signup successful', user: savedUser });
