@@ -5,8 +5,14 @@ require('./db/config')
 const model = require("./model/user_modal")
 
 app.use(express.json())
-app.use(cors(
-))
+
+const corsOptions = {
+    origin: 'http://localhost:3000', // ya tumhara frontend URL (e.g., https://your-site.netlify.app)
+    methods: ['GET', 'POST'],
+    credentials: true
+}
+
+app.use(cors(corsOptions))
 
 const port = 4000
 
@@ -30,7 +36,7 @@ app.post("/log_in", async (req, res) => {
 
 // Signup Route
 app.post('/sign_up', async (req, res) => {
-    const { fullName, email, password,confirmPassword  } = req.body
+    const { fullName, email, password, confirmPassword } = req.body
 
     try {
         const existingUser = await model.findOne({ email })
