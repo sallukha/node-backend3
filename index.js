@@ -7,7 +7,7 @@ const model = require("./model/user_modal")
 app.use(express.json())
 
 const corsOptions = {
-    origin: 'http://localhost:3000', // ya tumhara frontend URL (e.g., https://your-site.netlify.app)
+    origin:[ 'http://localhost:3000', 'https://transcendent-heliotrope-ea0403.netlify.app '], // ya tumhara frontend URL (e.g., https://your-site.netlify.app)
     methods: ['GET', 'POST'],
     credentials: true
 }
