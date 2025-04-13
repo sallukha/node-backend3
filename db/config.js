@@ -5,7 +5,7 @@ const connectDB = async () => {
       'mongodb+srv://sallukhan54154:y3KIhN0VQBm0klTD@pro-users.zywik9l.mongodb.net/?retryWrites=true&w=majority&appName=pro-users',
       {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
+        
       }
     );
     console.log('✅ Connected to MongoDB Atlas');
