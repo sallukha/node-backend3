@@ -66,11 +66,11 @@ app.post("/patient", async (req, res) => {
 
   await connectDB();
 
-  const { name, age, gender, diagnosis, treatment, admission_date, discharge_date } = req.body;
+  const { name, age, gender, contactNumber } = req.body;
 
   try {
     // Check required fields
-    if (!name || !age || !gender || !diagnosis || !treatment || !admission_date) {
+    if (!name || !age || !gender) {
       return res.status(400).json({ message: "Missing required patient data" });
     }
 
@@ -79,10 +79,8 @@ app.post("/patient", async (req, res) => {
       name,
       age,
       gender,
-      diagnosis,
-      treatment,
-      admission_date: new Date(admission_date),
-      discharge_date: discharge_date ? new Date(discharge_date) : null,
+      contactNumber
+
     });
     const savedPatient = await newPatient.save();
     res.status(201).json({ message: "Patient added successfully", patient: savedPatient });
