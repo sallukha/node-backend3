@@ -55,13 +55,13 @@ app.post('/signup', async (req, res) => {
 })
 app.post("/patient", async (res, req) => {
   await connectDB()
-  const { patientName, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body
+  const { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body
 
   if (!patientName || !age || !gender || !contactNumber || !reportType || !paymentStatus || !formData || !toDate) {
     return res.status(4000).json({ message: "Missing required patient data" })
   }
   const newPatient = new patient({
-    patientName,
+    name,
     age,
     gender,
     contactNumber,

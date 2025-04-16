@@ -1,41 +1,41 @@
 const mongoose = require('mongoose');
 
 const patientSchema = new mongoose.Schema({
-    patientName: {
+    name: {
         type: String,
         required: true,
         trim: true,
-    },
-    age: {
+      },
+      age: {
         type: Number,
         required: true,
         min: 0,
-    },
-    gender: {
+      },
+      gender: {
         type: String,
         enum: ['Male', 'Female', 'Other'],
         required: true,
-    },
-    reportType: {
+      },
+      reportType: {
         type: String,
         enum: ['Lab Test', 'OPD', 'IPD', 'Surgery'],
         required: true,
-    },
-    paymentStatus: {
+      },
+      paymentStatus: {
         type: String,
         enum: ['Paid', 'Unpaid', 'Pending'],
         required: true,
-    },
-    fromDate: {
+      },
+      fromDate: {
         type: Date,
         required: true,
-    },
-    toDate: {
+      },
+      toDate: {
         type: Date,
         required: true,
-    },
-}, {
-    timestamps: true,
-});
+      },
+    }, {
+      timestamps: true, 
+}); 
 
 module.exports = mongoose.models.Patient || mongoose.model('Patient', patientSchema);
