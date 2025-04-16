@@ -3,25 +3,19 @@ const cors = require("cors");
 const app = express();
 const connectDB = require("./db/config");
 
-// ✅ Connect to MongoDB
 connectDB();
 app.use(express.json());
 
-// ✅ CORS Configuration
+// ✅ CORS config
 const corsOptions = {
-  origin: [
-    'http://localhost:5174',
-    'http://localhost:3000',
-    'https://transcendent-medicare-ea040.netlify.app' // 🚫 no slash at end!
-  ],
+  origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app/'],
   methods: ['GET', 'POST', 'OPTIONS'],
-  credentials: true,
-  optionsSuccessStatus: 200
+  credentials: true
 };
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ handle preflight for all routes
+app.options('*', cors(corsOptions)); // ✅ handle preflight request
 
-// ✅ Import Models
+// ✅ Import models
 const User = require("./model/user_modal");
 const Patient = require("./model/patient");
 
@@ -78,7 +72,7 @@ app.post("/patient", async (req, res) => {
   }
 });
 
-// ✅ Start Server
+// ✅ Start server
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
