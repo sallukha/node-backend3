@@ -1,77 +1,79 @@
-const express = require("express")
-const cors = require('cors')
-const app = express()
-require('./db/config')
-const model = require("./model/user_modal")
-const connectDB = require('./db/config');
-const patient = require("./model/patient")
-app.use(express.json())
+const express = require("express");
+const cors = require("cors");
+const app = express();
+const connectDB = require("./db/config");
+
+connectDB();
+app.use(express.json());
+
+// ✅ CORS config
 const corsOptions = {
-  origin: ['http://localhost:3000/', 'https://transcendent-medicare-ea040.netlify.app/'], // ya tumhara frontend URL (e.g., https://your-site.netlify.app)
-  methods: ['GET', 'POST'],
+  origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app/'],
+  methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
-}
-app.use(cors())
-const port = 4000
-// Login Route
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // ✅ handle preflight request
+
+// ✅ Import models
+const User = require("./model/user_modal");
+const Patient = require("./model/patient");
+
+// ✅ Routes
+const patientRoutes = require("./routes/patient2");
+app.use("/patient", patientRoutes);
+
+// ✅ Login Route
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body
-  await connectDB();
+  const { email, password } = req.body;
   try {
-    const user = await model.findOne({ email, password })
-
+    const user = await User.findOne({ email, password });
     if (!user) {
-      return res.status(404).json({ message: "Invalid user credentials" })
+      return res.status(404).json({ message: "Invalid user credentials" });
     }
-
-    res.status(200).json({ message: "Login successful", user })
+    res.status(200).json({ message: "Login successful", user });
   } catch (error) {
-    console.error("Login error:", error)
-    res.status(500).json({ message: "An error occurred during login", error: error.message })
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Login error", error: error.message });
   }
-})
+});
 
-// Signup Route
-app.post('/signup', async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Only POST method is allowed' });
-  }
-  await connectDB();
+// ✅ Signup Route
+app.post("/signup", async (req, res) => {
   const { fullname, email, password } = req.body;
-  console.log({})
   try {
-    const existingUser = await model.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email already registered' });
+      return res.status(400).json({ message: "Email already registered" });
     }
-    const newUser = new model({ fullname, email, password, });
+    const newUser = new User({ fullname, email, password });
     const savedUser = await newUser.save();
-
-    res.status(201).json({ message: 'Signup successful', user: savedUser });
+    res.status(201).json({ message: "Signup successful", user: savedUser });
   } catch (err) {
-    res.status(500).json({ message: 'Signup failed', error: err.message });
+    res.status(500).json({ message: "Signup failed", error: err.message });
   }
-})
+});
+
+// ✅ Create Patient Route
 app.post("/patient", async (req, res) => {
-  await connectDB()
-  const { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body
-  console.log("Received Data:", req.body);
-  if (!name || !age || !gender || !contactNumber || !reportType || !paymentStatus || !formDate || !toDate) {
-    return res.status(4000).json({ message: "Missing required patient data" })
+  const { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body;
+
+  if (!name || !age || !gender || !contactNumber || !reportType || !paymentStatus || !fromDate || !toDate) {
+    return res.status(400).json({ message: "Missing required patient data" });
   }
-  const newPatient = new patient({
-    name,
-    age,
-    gender,
-    contactNumber,
-    reportType,
-    paymentStatus,
-    fromDate,
-    toDate
-  })
-  const savedPatient = newPatient.save()
-  req.status(201).json({ message: "Patient added successfully", patient: savedPatient })
-})
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`)
-})
+
+  try {
+    const newPatient = new Patient({ name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate });
+    const savedPatient = await newPatient.save();
+    res.status(201).json({ message: "Patient added successfully", patient: savedPatient });
+  } catch (error) {
+    console.error("Error saving patient:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+});
+
+// ✅ Start server
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
