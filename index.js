@@ -3,10 +3,8 @@ const cors = require('cors')
 const app = express()
 require('./db/config')
 const model = require("./model/user_modal")
-const modal = require("./model/patient")
 const connectDB = require('./db/config');
 const patient = require("./model/patient")
-
 app.use(express.json())
 const corsOptions = {
   origin: ['http://localhost:3000/', 'https://transcendent-heliotrope-ea0403.netlify.app/'], // ya tumhara frontend URL (e.g., https://your-site.netlify.app)
@@ -54,10 +52,14 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ message: 'Signup failed', error: err.message });
   }
 })
-app.post("/patient", async (req, res) => {
-  await connectDB();
-
-  const {
+app.post("/patient", async (req,res) => {
+  await connectDB()
+  const { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body
+  console.log("Received Data:", req.body);
+  if (!name || !age || !gender || !contactNumber || !reportType || !paymentStatus || !formDate || !toDate) {
+    return res.status(4000).json({ message: "Missing required patient data" })
+  }
+  const newPatient = new patient({
     name,
     age,
     gender,
@@ -65,52 +67,11 @@ app.post("/patient", async (req, res) => {
     reportType,
     paymentStatus,
     fromDate,
-    toDate,
-  } = req.body;
-
-  console.log("Received Data:", req.body);
-
-  // ❗ Validate all required fields
-  if (
-    !name ||
-    !age ||
-    !gender ||
-    !contactNumber ||
-    !reportType ||
-    !paymentStatus ||
-    !fromDate ||
-    !toDate
-  ) {
-    return res.status(400).json({ message: "Missing required patient data" });
-  }
-
-  try {
-    // ✅ Create new patient
-    const newPatient = new patient({
-      name,
-      age,
-      gender,
-      contactNumber,
-      reportType,
-      paymentStatus,
-      fromDate,
-      toDate,
-    });
-
-    // ✅ Await the save operation
-    const savedPatient = await newPatient.save();
-
-    // ✅ Return success response
-    res
-      .status(201)
-      .json({ message: "Patient added successfully", patient: savedPatient });
-
-  } catch (error) {
-    console.error("Error saving patient:", error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
-  }
-});
-
+    toDate
+  })
+  const savedPatient = newPatient.save()
+  req.status(201).json({ message: "Patient added successfully", patient: savedPatient })
+})
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
