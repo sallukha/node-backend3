@@ -1,32 +1,26 @@
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./db/config");
-const patientRoutes = require("./routes/patient2");
-const User = require("./model/user_modal");
-
 const app = express();
-connectDB();
+const connectDB = require("./db/config");
 
-// ✅ Middleware
+connectDB();
 app.use(express.json());
 
-// ✅ CORS Configuration
+// ✅ CORS config
 const corsOptions = {
   origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app/'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // handle preflight
+app.options('*', cors(corsOptions)); // ✅ handle preflight request
 
-// ✅ Logger (for debugging)
-app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.path}`);
-  next();
-});
+// ✅ Import models
+const User = require("./model/user_modal");
+const Patient = require("./model/patient");
 
-// ✅ Patient Routes
+// ✅ Routes
+const patientRoutes = require("./routes/patient2");
 app.use("/patient", patientRoutes);
 
 // ✅ Login Route
@@ -60,8 +54,26 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// ✅ Start Server
+// ✅ Create Patient Route
+app.post("/patient", async (req, res) => {
+  const { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body;
+
+  if (!name || !age || !gender || !contactNumber || !reportType || !paymentStatus || !fromDate || !toDate) {
+    return res.status(400).json({ message: "Missing required patient data" });
+  }
+
+  try {
+    const newPatient = new Patient({ name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate });
+    const savedPatient = await newPatient.save();
+    res.status(201).json({ message: "Patient added successfully", patient: savedPatient });
+  } catch (error) {
+    console.error("Error saving patient:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+});
+
+// ✅ Start server
 const PORT = 4000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`);
+});  
