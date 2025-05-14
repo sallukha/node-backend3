@@ -10,7 +10,7 @@ connectDB();
 app.use(express.json());
 app.use(cookieParser());
 
-const JWT_SECRET = "your_secret_key"; // Replace with env variable in production
+const JWT_SECRET = "mySuperSecretKey123"; // Replace with env variable in production
 
 const corsOptions = {
   origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app'],
