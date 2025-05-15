@@ -1,4 +1,4 @@
- // routes/patient2.js
+// routes/patient2.js
 
 const express = require("express");
 const router = express.Router();
