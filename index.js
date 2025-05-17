@@ -8,7 +8,7 @@ app.use(express.json());
 
  
 const corsOptions = {
-  origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app',"https://shipshop-lulu-07.netlify.app"],
+  origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app'],
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
 };
