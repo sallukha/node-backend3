@@ -1,19 +1,16 @@
- const express = require("express");
+const express = require("express");
 const cors = require("cors");
 const app = express();
 const connectDB = require("./db/config");
-
 connectDB();
 app.use(express.json());
-
- 
 const corsOptions = {
   origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app'],
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); 
+app.options('*', cors(corsOptions));
 
 // ✅ Import models
 const User = require("./model/user_modal");
@@ -72,10 +69,10 @@ app.post("/patient", async (req, res) => {
   }
 });
 
- 
+
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});   
+});
 
 

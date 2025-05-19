@@ -12,10 +12,10 @@ const patientSchema = new mongoose.Schema({
     min: 0,
   },
    
-  // contectNumber:{
-  //    type:Number,
-  //    required:true
-  // },
+  contectNumber:{
+     type:Number,
+     required:true
+  },
 
   gender: {
     type: String,
