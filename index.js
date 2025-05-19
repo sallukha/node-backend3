@@ -63,7 +63,7 @@ app.post("/patient", async (req, res) => {
   }
 
   try {
-    const newPatient = new Patient({ name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate });
+    const newPatient = new Patient({ name, age, gender, contectNumber, reportType, paymentStatus, fromDate, toDate });
     const savedPatient = await newPatient.save();
     res.status(201).json({ message: "Patient added successfully", patient: savedPatient });
   } catch (error) {
