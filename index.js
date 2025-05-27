@@ -93,9 +93,6 @@ app.post("/patient", async (req, res) => {
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
- 
-
-
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
