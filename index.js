@@ -6,7 +6,7 @@ connectDB();
 app.use(express.json());
 const corsOptions = {
   origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app'],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'OPTIONS ','PUT'],
   credentials: true
 };
 app.use(cors(corsOptions));
@@ -68,6 +68,32 @@ app.post("/patient", async (req, res) => {
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
+
+ app.put("/patient/:id", async (req, res) => {
+  const { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate } = req.body;
+
+  if (!name || !age || !gender || !contactNumber || !reportType || !paymentStatus || !fromDate || !toDate) {
+    return res.status(400).json({ message: "Missing required patient data" });
+  }
+
+  try {
+    const updatedPatient = await Patient.findByIdAndUpdate(
+      req.params.id,
+      { name, age, gender, contactNumber, reportType, paymentStatus, fromDate, toDate },
+      { new: true } // return the updated document
+    );
+
+    if (!updatedPatient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    res.status(200).json({ message: "Patient updated successfully", patient: updatedPatient });
+  } catch (error) {
+    console.error("Error updating patient:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+});
+ 
 
 
 const PORT = 4000;
