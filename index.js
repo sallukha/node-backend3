@@ -24,8 +24,10 @@ app.options('*', cors(corsOptions));
 const User = require("./model/user_modal");
 const Patient = require("./model/patient");
 
-// JWT Secret Key
-const JWT_SECRET = "your_super_secret_key"; // keep this in .env in production
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET;
+
+                          ; // keep this in .env in production
 
 // ✅ Routes
 const patientRoutes = require("./routes/patient2");
@@ -121,7 +123,6 @@ app.put("/patient/:id", async (req, res) => {
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
-
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
