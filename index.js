@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 const app = express();
 const connectDB = require("./db/config");
 
@@ -14,7 +13,7 @@ const JWT_SECRET = ""; // Replace with env variable in production
 
 const corsOptions = {
   origin: ['http://localhost:5174', 'http://localhost:3000', 'https://transcendent-medicare-ea040.netlify.app'],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'OPTIONS',],
   credentials: true
 };
 app.use(cors(corsOptions));
